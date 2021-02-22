@@ -33,9 +33,9 @@ app.use(express.json()); // accept json
 
 
 // use routes
-app.use('/api/authentication', authRoute); // API routes for Secretariat registrations and All logins
-app.use('/api/staff', staffRoute); // API routes for Sec to manage their staff accounts
-app.use('/api/secretariat', secretariatRoute); // API routes for Secretariat (for them to edit their own profiles)
+app.use('/authentication', authRoute); // API routes for Secretariat registrations and All logins
+app.use('/staff', staffRoute); // API routes for Sec to manage their staff accounts
+app.use('/secretariat', secretariatRoute); // API routes for Secretariat (for them to edit their own profiles)
 
 
 const port = process.env.PORT || 8080; // can do 'export PORT=X' to change env variable
