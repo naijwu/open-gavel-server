@@ -17,6 +17,6 @@
   "scripts": {
     "start": "node app.js"
   },
-  "author": "",
+  "author": "Jae Wu",
   "license": "ISC"
 }
