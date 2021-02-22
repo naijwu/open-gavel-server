@@ -26,8 +26,8 @@ const corsConfig = {
     optionsSuccessStatus: 200
 }
 
-app.options('*', cors(corsConfig));
-app.use(cors(corsConfig));
+app.options('*', cors());
+app.use(cors());
 
 app.use(express.json()); // accept json
 
