@@ -3,6 +3,7 @@ const router = express.Router();
 const Secretariat = require('../models/Secretariat');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Staff = require('../models/Staff');
 
 // register on website (register as secretariat)
 router.post('/secretariat/register', async (req, res) => {
@@ -66,7 +67,10 @@ router.post('/secretariat/login', async (req, res) => {
         // information that will be available for user
         _id: secInDB._id,
         conference: secInDB.conference,
-        type: secInDB.type
+        type: secInDB.type,
+        firstName: secInDB.firstName,
+        lastName: secInDB.lastName,
+        email: secInDB.email
     }, process.env.TOKEN_SECRET);
     res.header('auth-token', token).send(token);
 });
@@ -74,6 +78,36 @@ router.post('/secretariat/login', async (req, res) => {
 
 // login as staff
 
+router.post('/staff/login', async (req, res) => {
+    // input: username, conference, password
+
+    // TODO: VALIDATE & CLEAN input
+
+
+    // Narrow down down to staff in conference
+    const staffInConference = await Staff.find({ conference_id: req.body.conference.toLowerCase() });
+
+    // check if username exists
+    const staffInDB = staffInConference.find(x => x.username === req.body.username);
+
+    if(!staffInDB) return res.status(400).json({message: 'Username or password is wrong'});
+    
+    // Check if password is valid
+    // const validPass = await bcrypt.compare(req.body.password, staffInDB.password) // Plain text
+    const validPass = (staffInDB.password === req.body.password);
+    if(!validPass) return res.status(400).send('Username or password is wrong');
+
+    
+    // Makes pass -- Now, create and assign a token
+    const token = jwt.sign({
+        _id: staffInDB._id,
+        conference: staffInDB.conference,
+        committee: staffInDB.committee,
+        type: 'staff',
+        // also will have to add the OG states
+    }, process.env.TOKEN_SECRET);
+    res.header('auth-token', token).send(token);
+});
 
 
 

@@ -6,9 +6,14 @@ var cors = require('cors')
 const app = express();
 const mongoose = require('mongoose');
 
+// dev purposes
+mongoose.set('debug', true);
+
+
 // import routes
 const authRoute = require('./routes/auth'); 
 const staffRoute = require('./routes/staff'); 
+const secretariatRoute = require('./routes/secretariat'); 
 
 
 mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -30,6 +35,7 @@ app.use(express.json()); // accept json
 // use routes
 app.use('/api/authentication', authRoute); // API routes for Secretariat registrations and All logins
 app.use('/api/staff', staffRoute); // API routes for Sec to manage their staff accounts
+app.use('/api/secretariat', secretariatRoute); // API routes for Secretariat (for them to edit their own profiles)
 
 
 const port = process.env.PORT || 8080; // can do 'export PORT=X' to change env variable
