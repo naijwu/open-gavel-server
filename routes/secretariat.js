@@ -87,6 +87,19 @@ router.patch('/:id', verify, roleSecVerify, getUser, async (req, res) => {
 });
 
 
+// delete
+router.delete('/:id', verify, roleSecVerify, getUser, async (req, res) => {
+    try {
+        await res.secretariat.remove();
+        res.send('User Deleted');
+    } catch (err) {
+        res.status(500).json({
+            message: err.message,
+        })
+    }
+});
+
+
 async function getUser(req, res, next) {
     let secretariat;
 
