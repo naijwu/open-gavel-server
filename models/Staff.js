@@ -37,26 +37,7 @@ const staffSchema = new mongoose.Schema({
         type: Date,
         required: true,
         default: Date.now
-    },
-    // OGD: {
-    //     preferences: { // app preferences -- to be persisted
-
-    //     },
-    //     countries: { // consists of country codes -- to be persisted
-    //         AZ: { 
-    //             name: String,
-    //             flag: String,
-    //             enabled: String,
-    //             og_state: { // information relevant to OpenGavel use
-    //                 presence: String, // roll call
-    //                 primary_speaks: Number,
-    //                 secondary_speaks: Number,
-    //                 moderated_speaks: Number,
-    //             }
-    //         }
-    //         // ...    TODO: Add rest of the countries
-    //     }
-    // },
+    }
 });
 
 module.exports = mongoose.model('Staff', staffSchema);
