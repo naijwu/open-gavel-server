@@ -55,7 +55,7 @@ router.post('/secretariat/login', async (req, res) => {
 
     // Check if email exists
     const secInDB = await Secretariat.findOne({email: req.body.email});
-    if(!secInDB) return res.status(400).json({message: 'Email or password is wrong'});
+    if(!secInDB) return res.status(400).send('Email or password is wrong.');
     
     // Check if password is valid
     const validPass = await bcrypt.compare(req.body.password, secInDB.password)
