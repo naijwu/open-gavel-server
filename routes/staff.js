@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const Staff = require('../models/Staff');
+const Committee = require('../models/Committee');
 const verify = require('../middleware/authVerify');
 const roleSecVerify = require('../middleware/roleSecVerify');
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs'); // only for hashing passwords
+
 
 // API calls that SECRETARIATS would use (all must have valid JWToken -- private routes hehe)
 
@@ -29,25 +31,52 @@ router.post('/', verify, roleSecVerify, async (req, res) => {
     // const salt = await bcrypt.genSalt(10);
     // const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    
-    const staff = new Staff({
-        committee: req.body.committee,
-        username: req.body.username,
-        // password: hashedPassword,
-        password: req.body.password,
-        conference: req.body.conference, 
-        conference_id: req.body.conference.toLowerCase().replace(/\s/g, ''),
-        type: 'staff'
-        // and other OG persist information here
-    });
 
+    // Create a committee (committee._id has to be linked to staff)
+    const linkedCommittee = new Committee({
+        statistics: {
+            mod_no: '',
+            mod_minutes: '',
+            unmod_no: '',
+            unmod_minutes: '',
+            primary_no: '',
+            primary_minutees: '',
+            secondary_no: '',
+            secondary_minutes: '',
+        },
+        countries: [],
+    })
 
     try {
-        const newStaff = await staff.save();
-        res.status(201).json(newStaff)
-    } catch (err) {
+
+        // Save committee object to database
+        const newCommittee = await linkedCommittee.save();
+
+        // Create a staff object
+        const staff = new Staff({
+            committee: req.body.committee,
+            username: req.body.username,
+            // password: hashedPassword,
+            password: req.body.password,
+            conference: req.body.conference, 
+            conference_id: req.body.conference.toLowerCase().replace(/\s/g, ''),
+            type: 'staff',
+            committee_id: newCommittee._id,
+        });
+    
+        try {
+            // save new staff to database
+            const newStaff = await staff.save();
+            res.status(201).json(newStaff);
+        } catch (err) {
+            res.status(400).json({
+                message: err.message,
+            });
+        }
+
+    } catch(error) {
         res.status(400).json({
-            message: err.message,
+            message: error.message,
         });
     }
 });
@@ -84,16 +113,28 @@ router.post('/:id', verify, roleSecVerify, getUser, async (req, res) => {
 
 // delete
 router.delete('/:id', verify, roleSecVerify, getUser, async (req, res) => {
+
     try {
-        await res.user.remove();
-        res.json({
-            message: 'User deleted successfully.'
-        })
-    } catch (err) {
+        await Committee.findById(res.user.committee_id).deleteOne();
+
+        try {
+            await res.user.remove();
+        
+            res.json({
+                message: 'Committee account and data deleted successfully.'
+            })
+        } catch (err) {
+            res.status(500).json({
+                message: 'Error during committee deletion ' + err.message,
+            })
+        }
+    } catch (error) {
         res.status(500).json({
-            message: err.message,
+            message: error.message,
         })
     }
+
+
 });
 
 

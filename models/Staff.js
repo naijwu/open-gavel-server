@@ -10,6 +10,10 @@ const staffSchema = new mongoose.Schema({
         type: String,
         max: 100,
     },
+    committee_id: {
+        type: String,
+        max: 200,
+    },
     username: {
         type: String,
         max: 100,

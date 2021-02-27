@@ -103,8 +103,8 @@ router.post('/staff/login', async (req, res) => {
         _id: staffInDB._id,
         conference: staffInDB.conference,
         committee: staffInDB.committee,
-        type: 'staff',
-        // also will have to add the OG states
+        committee_id: staffInDB.committee_id,
+        type: 'staff'
     }, process.env.TOKEN_SECRET);
     res.header('auth-token', token).send(token);
 });
