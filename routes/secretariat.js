@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Staff = require('../models/Staff');
 const Secretariat = require('../models/Secretariat');
+const Committee = require('../models/Committee');
 const verify = require('../middleware/authVerify');
 const roleSecVerify = require('../middleware/roleSecVerify');
 const jwt = require('jsonwebtoken');
@@ -62,6 +63,11 @@ router.patch('/:id', verify, roleSecVerify, getUser, async (req, res) => {
         res.secretariat.lastName = req.body.lastName;
     } 
 
+    if (req.body.conferenceFullName != null) {
+        // TODO: IMPORTANT: first do check to see if full conference name already exists
+        res.secretariat.conferenceFullName = req.body.conferenceFullName;
+    } 
+
     try {
         const updatedSecretariat = await res.secretariat.save();
 
@@ -69,6 +75,7 @@ router.patch('/:id', verify, roleSecVerify, getUser, async (req, res) => {
             // information that will be available for user
             _id: updatedSecretariat._id,
             conference: updatedSecretariat.conference,
+            conferenceFullName: updatedSecretariat.conferenceFullName,
             type: updatedSecretariat.type,
             firstName: updatedSecretariat.firstName,
             lastName: updatedSecretariat.lastName,
@@ -89,6 +96,32 @@ router.patch('/:id', verify, roleSecVerify, getUser, async (req, res) => {
 
 // delete
 router.delete('/:id', verify, roleSecVerify, getUser, async (req, res) => {
+
+    // delete all staff and committee data associated with the staff
+    const staffInConference = await Staff.find({ conference: res.secretariat.conference }); 
+    
+    staffInConference.forEach(async (staff) => {
+
+        try {
+            let deletedStaff = await staff.deleteOne();
+
+            try {
+
+                await Committee.findById(deletedStaff.committee_id).deleteOne();
+            
+            } catch (err) {
+                res.status(500).json({
+                    message: 'Error during committee deletion ' + err.message,
+                })
+            }
+        } catch (error) {
+            res.status(500).json({
+                message: error.message,
+            })
+        }
+    });
+
+    // delete secretariat
     try {
         await res.secretariat.remove();
         res.send('User Deleted');

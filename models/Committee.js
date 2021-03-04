@@ -41,6 +41,10 @@ const committeeSchema = new mongoose.Schema({
         stats_primary: String,
         stats_secondary: String
     }],
+    settings: {
+        type: Map,
+        of: String
+    },
     lastUpdated: {
         type: Date,
         required: true,

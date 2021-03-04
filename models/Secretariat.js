@@ -27,6 +27,11 @@ const secretariatSchema = new mongoose.Schema({
         min: 6,
         max: 1024,
     },
+    conferenceFullName: {
+        type: String,
+        required: true,
+        max: 100,
+    },
     conference: {
         type: String,
         required: true,

@@ -15,6 +15,7 @@ router.post('/:id', verify, getCommittee, async (req, res) => {
     // update values of committee with the ID to the sent information
     res.comm.countries = req.body.countries;
     res.comm.statistics = req.body.statistics;
+    res.comm.settings = req.body.settings;
 
     try {
         const updatedComm = await res.comm.save();

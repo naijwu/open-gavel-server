@@ -30,6 +30,7 @@ router.post('/secretariat/register', async (req, res) => {
         lastName: req.body.lastName,
         email: req.body.email,
         password: hashedPassword,
+        conferenceFullName: req.body.conferenceFullName,
         conference: req.body.conference,
         type: 'secretariat',
     });
@@ -67,6 +68,7 @@ router.post('/secretariat/login', async (req, res) => {
         // information that will be available for user
         _id: secInDB._id,
         conference: secInDB.conference,
+        conferenceFullName: secInDB.conferenceFullName,
         type: secInDB.type,
         firstName: secInDB.firstName,
         lastName: secInDB.lastName,
