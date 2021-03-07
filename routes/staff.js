@@ -36,13 +36,22 @@ router.post('/', verify, roleSecVerify, async (req, res) => {
     const linkedCommittee = new Committee({
         statistics: {
             mod_no: '',
-            mod_minutes: '',
+            mod_seconds: '',
             unmod_no: '',
-            unmod_minutes: '',
+            unmod_seconds: '',
+            roundtable_no: '',
+            roudntable_seconds: '',
             primary_no: '',
-            primary_minutees: '',
+            primary_mseconds: '',
             secondary_no: '',
-            secondary_minutes: '',
+            secondary_seconds: '',
+        },
+        settings: {
+            default_start_screen: '',
+            hide_all_notifications: '',
+            default_drawer_position: '',
+            auto_start_speaker_timer: '',
+            dark_mode:'',
         },
         countries: [],
     })

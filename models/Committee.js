@@ -19,7 +19,7 @@ const mongoose = require('mongoose');
 //         presence: ''
 //         country_flag_base: '',
 //         stats_moderated:
-//         stats_unmoderated: '',
+//         stats_single: '',
 //         stats_primary: '',
 //         stats_secondary: '',
 //     },
