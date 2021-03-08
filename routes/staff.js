@@ -46,6 +46,7 @@ router.post('/', verify, roleSecVerify, async (req, res) => {
             default_start_screen: '',
             hide_all_notifications: '',
             default_drawer_position: '',
+            default_speaker_screen: '',
             auto_start_speaker_timer: '',
             dark_mode:'',
         },
