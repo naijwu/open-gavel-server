@@ -40,11 +40,7 @@ router.post('/', verify, roleSecVerify, async (req, res) => {
             unmod_no: '',
             unmod_seconds: '',
             roundtable_no: '',
-            roudntable_seconds: '',
-            primary_no: '',
-            primary_mseconds: '',
-            secondary_no: '',
-            secondary_seconds: '',
+            roundtable_seconds: '',
         },
         settings: {
             default_start_screen: '',
