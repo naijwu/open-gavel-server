@@ -9,13 +9,6 @@ const roleSecVerify = require('../middleware/roleSecVerify');
 
 // API calls that SECRETARIATS would use (all must have valid JWToken -- private routes hehe)
 
-
-// TODO: DELETE THIS -- token experimentation 
-router.get('/', verify, roleSecVerify, (req, res) => {
-    res.send(req.tokenData);
-})
-
-
 // create staff account
 router.post('/', verify, roleSecVerify, async (req, res) => {
 

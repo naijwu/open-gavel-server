@@ -56,11 +56,15 @@ router.post('/secretariat/login', async (req, res) => {
 
     // Check if email exists
     const secInDB = await Secretariat.findOne({email: req.body.email});
-    if(!secInDB) return res.status(400).send('Email or password is wrong.');
+    if(!secInDB) return res.status(400).json({
+        message: 'Email or password is wrong'
+    });
     
     // Check if password is valid
     const validPass = await bcrypt.compare(req.body.password, secInDB.password)
-    if(!validPass) return res.status(400).send('Email or password is wrong');
+    if(!validPass) return res.status(400).json({
+        message: 'Email or password is wrong'
+    });
 
     
     // Makes pass -- Now, create and assign a token
@@ -97,7 +101,9 @@ router.post('/staff/login', async (req, res) => {
     // Check if password is valid
     // const validPass = await bcrypt.compare(req.body.password, staffInDB.password) // Plain text
     const validPass = (staffInDB.password === req.body.password);
-    if(!validPass) return res.status(400).send('Username or password is wrong');
+    if(!validPass) return res.status(400).json({
+        message: 'Email or password is wrong'
+    });
 
     
     // Makes pass -- Now, create and assign a token

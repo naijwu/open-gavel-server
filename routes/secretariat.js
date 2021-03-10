@@ -124,7 +124,9 @@ router.delete('/:id', verify, roleSecVerify, getUser, async (req, res) => {
     // delete secretariat
     try {
         await res.secretariat.remove();
-        res.send('User Deleted');
+        res.status(200).json({
+            message: 'User deleted'
+        });
     } catch (err) {
         res.status(500).json({
             message: err.message,
