@@ -102,7 +102,7 @@ router.post('/staff/login', async (req, res) => {
     // const validPass = await bcrypt.compare(req.body.password, staffInDB.password) // Plain text
     const validPass = (staffInDB.password === req.body.password);
     if(!validPass) return res.status(400).json({
-        message: 'Email or password is wrong'
+        message: 'Username or password is wrong'
     });
 
     
