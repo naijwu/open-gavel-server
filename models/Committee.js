@@ -35,7 +35,7 @@ const committeeSchema = new mongoose.Schema({
         name: String,
         country_code: String,
         presence: String,
-        country_flag_base: String, // base64 of custom delegation flag (field doesnt exist for UN countries)
+        country_flag_base: Object, // base64 of custom delegation flag (field doesnt exist for UN countries)
         stats_moderated: String,
         stats_single: String,
         stats_primary: String,
