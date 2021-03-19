@@ -42,6 +42,7 @@ router.post('/', verify, roleSecVerify, async (req, res) => {
             default_speaker_screen: '',
             auto_start_speaker_timer: '',
             dark_mode:'',
+            speaking_time: '60',
         },
         countries: [],
     })
