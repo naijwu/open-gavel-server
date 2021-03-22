@@ -15,8 +15,10 @@ router.post('/', verify, roleSecVerify, async (req, res) => {
     const staffInConference = await Staff.find({ conference: req.body.conference });
 
     staffInConference.forEach((staff) => {
-        if(staff.username === req.body.username) {
-            return res.status(400).json({ message: 'Account with the username already exists'});
+        if((staff.username === req.body.username) && (staff.conference === req.body.conference)) {
+            return res.status(400).json({
+                message: 'Account with the username already exists'
+            });
         }
     });
 
