@@ -12,11 +12,13 @@ const roleSecVerify = require('../middleware/roleSecVerify');
 // create staff account
 router.post('/', verify, roleSecVerify, async (req, res) => {
 
-    const staffInConference = await Staff.find({ conference: req.body.conference });
+    const staffsInConference = await Staff.find({ conference_id: req.body.conference.toLowerCase().replace(/s/g,'') });
 
-    staffInConference.forEach((staff) => {
-        if(staff.username === req.body.username) {
-            return res.status(400).json({ message: 'Account with the username already exists'});
+    staffsInConference.forEach((staff) => {
+        if((staff.username === req.body.username)) {
+            return res.status(400).json({
+                message: 'Account with the username already exists'
+            });
         }
     });
 
@@ -84,7 +86,7 @@ router.post('/', verify, roleSecVerify, async (req, res) => {
 // get all staff of conference
 router.get('/:conference', verify, roleSecVerify, async (req, res) => {
     try {
-        const staffs = await Staff.find({ conference: req.params.conference });
+        const staffs = await Staff.find({ conference_id: req.params.conference.toLowerCase().replace(/s/g,'') });
         res.json(staffs);
     } catch (err) {
         res.status(500).json({
