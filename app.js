@@ -15,6 +15,7 @@ const authRoute = require('./routes/auth');
 const staffRoute = require('./routes/staff'); 
 const secretariatRoute = require('./routes/secretariat'); 
 const committeeRoute = require('./routes/committee');
+const stripeRoute = require('./routes/stripePayment')
 
 
 // temporary - adding another API for CAHS 2021 IPC LMAO
@@ -41,6 +42,8 @@ app.use('/authentication', authRoute); // API routes for Secretariat registratio
 app.use('/staff', staffRoute); // API routes for Sec to manage their staff accounts
 app.use('/secretariat', secretariatRoute); // API routes for Secretariat (for them to edit their own profiles)
 app.use('/committee', committeeRoute);
+//API route for stripe integration
+app.use('/donate', stripeRoute);
 
 
 

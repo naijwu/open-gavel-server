@@ -1,24 +1,34 @@
 const express = require('express');
 const router = express.Router();
-const stripe = require('stripe')(process.env.STRIPE_TEST_KEY);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const PaymentRecords = require('../models/PaymentRecords')
 
 
 
-const donationAmount = userInputedAmount => {
-//User input for donation amount will be here
-//boilerplate code for now to charge $15.00
-return 15
-}
+router.post("/payment-intent", async (req, res) => {
+    const newPaymentRecord = new PaymentRecords({
+        donationAmount: req.body.donationAmount,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+    })
 
-
-router.post("/payments", async (req, res) => {
-    const paymentIntent = await stripe.paymentIntents.create({
-        amount: donationAmount(userInputedAmount),
+    var paymentIntent = await stripe.paymentIntents.create({
+        amount: req.body.donationAmount,
         currency: "cad"
-    });
-    res.send({
-        clientSecret: paymentIntent.client_secret
-    });
+    })
+
+    try{
+        const newDonation = await newPaymentRecord.save();
+        res.status(200).json(newDonation)
+        res.send({
+            clientSecret: paymentIntent.client_secret
+        })
+    } catch(err){
+        res.status(400).json({
+            message: err.message,
+        });
+    }
 });
 
 module.exports = router;
