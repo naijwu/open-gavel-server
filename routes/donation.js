@@ -7,14 +7,14 @@ const PaymentRecords = require('../models/PaymentRecords')
 
 router.post("/payment-intent", async (req, res) => {
     const newPaymentRecord = new PaymentRecords({
-        donationAmount: req.body.donationAmount,
+        donationAmount: req.body.donationAmount * 100,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
     })
 
     var paymentIntent = await stripe.paymentIntents.create({
-        amount: req.body.donationAmount,
+        amount: req.body.donationAmount * 100,
         currency: "cad"
     })
 
