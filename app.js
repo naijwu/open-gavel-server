@@ -1,13 +1,17 @@
-// const dotenv = require('dotenv');
-// dotenv.config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 const express = require("express");
 var cors = require("cors");
 const app = express();
 const mongoose = require("mongoose");
+const { initializeFirebase } = require("./lib/firebase");
 
 // dev purposes
 mongoose.set("debug", true);
+
+// firebase for storage
+initializeFirebase();
 
 // import routes
 const authRoute = require("./routes/auth");
