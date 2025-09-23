@@ -1,16 +1,16 @@
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
 const Committee = require('../models/Committee');
 const verify = require('../middleware/authVerify');
 const { uploadImage } = require('../lib/firebase');
 
 const upload = multer({
-    storage: multer.memoryStorage(), // Store files in memory as buffers
+    storage: multer.memoryStorage(),
     limits: {
-      fileSize: 5 * 1024 * 1024, // 5MB limit
+      fileSize: 4 * 1024 * 1024, // 4MB limit
     },
     fileFilter: (req, file, cb) => {
-      // Only allow image files
       if (file.mimetype.startsWith('image/')) {
         cb(null, true);
       } else {
@@ -25,8 +25,35 @@ router.get('/:id', verify, getCommittee, (req, res) => {
 });
 
 
+// hotadd: upload country image
+router.post('/:id/upload-image', verify, upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({
+                message: 'No image file provided'
+            });
+        }
+        const downloadURL = await uploadImage(req.params.id, req.body.countryName, req.file);
+        if (downloadURL) {
+            res.json({
+                message: 'Image uploaded successfully',
+                downloadURL: downloadURL
+            });
+        } else {
+            res.status(500).json({
+                message: 'Failed to upload image'
+            });
+        }
+    } catch(err) {
+        res.status(400).json({
+            message: err.message
+        });
+    }
+});
+
 // update
 router.post('/:id', verify, getCommittee, async (req, res) => {
+    console.log('endpoint hit')
     
     // update values of committee with the ID to the sent information
     if(req.body.countries) {
@@ -50,40 +77,19 @@ router.post('/:id', verify, getCommittee, async (req, res) => {
 });
 
 
-// hotadd: upload country image
-router.post('/:id/country/:country_name/upload-image', verify, upload.single('image'), async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({
-                message: 'No image file provided'
-            });
-        }
-        const downloadURL = await uploadImage(req.params.id, req.params.country_name, req.file);
-        if (downloadURL) {
-            res.json({
-                message: 'Image uploaded successfully',
-                downloadURL: downloadURL
-            });
-        } else {
-            res.status(500).json({
-                message: 'Failed to upload image'
-            });
-        }
-    } catch(err) {
-        res.status(400).json({
-            message: err.message
-        });
-    }
-});
-
-
 
 async function getCommittee(req, res, next) {
+    console.log('getting committee')
+    console.log('Searching for ID:', req.params.id);
+    console.log('ID type:', typeof req.params.id);
+    console.log('ID length:', req.params.id.length);
+
     let committee;
 
     try {
         committee = await Committee.findById(req.params.id);
         if (committee == null) {
+            console.log('committee is null?')
             return res.status(404).json({
                 message: `Cannot find committee with id ${req.params.id}`
             });

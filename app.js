@@ -1,5 +1,5 @@
-const dotenv = require("dotenv");
-dotenv.config();
+// const dotenv = require("dotenv");
+// dotenv.config();
 
 const express = require("express");
 var cors = require("cors");
@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const { initializeFirebase } = require("./lib/firebase");
 
 // dev purposes
-mongoose.set("debug", true);
+// mongoose.set("debug", true);
 
 // firebase for storage
 initializeFirebase();
@@ -31,14 +31,15 @@ const db = mongoose.connection;
 db.on("error", (error) => console.error(error)); // always, on error
 db.once("open", () => console.log("Connected to database!")); // once, on open
 
-const corsConfig = {
-	origin: process.env.CLIENT_URL,
-	optionsSuccessStatus: 200,
-};
+// const corsConfig = {
+// 	origin: process.env.CLIENT_URL,
+// 	optionsSuccessStatus: 200,
+// };
 
 app.options("*", cors());
 app.use(cors());
-app.use(express.json()); // accept json
+app.use(express.json({ limit: '10mb' })); 
+app.use(express.urlencoded({ limit: '10mb', extended: true })); // for form data
 
 // use routes
 app.use("/authentication", authRoute); // API routes for Secretariat registrations and All logins
